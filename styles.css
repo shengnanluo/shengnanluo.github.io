@@ -1,0 +1,71 @@
+/* 全局样式 */
+body, html {
+  min-height: 100vh;
+  font-family: sans-serif;
+  margin: 0;
+  background: linear-gradient(to bottom right, #9b5de5, #f15bb5, #f26b6b);
+  color: white;
+}
+
+header {
+  padding: 1.5rem 1rem;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 800;
+}
+
+.social-icons a {
+  color: inherit;
+  margin-left: 1rem;
+}
+
+.main-content {
+  max-width: 1120px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.heading {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.intro-text {
+  color: #FFEA94;
+  font-size: 1.25rem;
+}
+
+.image {
+  border-radius: 9999px;
+  max-width: 400px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+.tab-buttons button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  transition: background-color 0.3s;
+}
+
+.tab-buttons .active-tab {
+  background-color: white;
+  color: #9b5de5;
+}
+
+.footer {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
