@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const featuresContent = `
         <h3 class="text-2xl font-bold mb-4">一二布布的特点</h3>
         <ul class="space-y-2">
-            ${['毛色: 橘白相间', '性格: 活泼好动', '爱好: 追逐玩具、晒太阳', '特长: 会做各种可爱的表情']
+            ${['毛色: 橘白相间', '性格: 活泼动', '爱好: 追逐玩具、晒太阳', '特长: 会做各种可爱的表情']
                 .map((feature, index) => `
                     <li class="flex items-center text-lg fade-in" style="animation-delay: ${index * 0.1}s">
                         <svg class="h-5 w-5 mr-2 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -28,11 +28,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const galleryContent = `
         <h3 class="text-2xl font-bold mb-4">一二布布的日常</h3>
         <div class="grid grid-cols-2 gap-4">
-            ${['玩耍', '睡觉', '吃饭', '撒娇'].map((activity, index) => `
+            ${[
+                {en: 'play', zh: '玩耍'},
+                {en: 'sleep', zh: '睡觉'},
+                {en: 'eat', zh: '吃饭'},
+                {en: 'cute', zh: '撒娇'}
+            ].map((item, index) => `
                 <div class="gallery-item rounded-lg" style="animation-delay: ${index * 0.1}s">
-                    <img src="/placeholder.svg?height=150&width=150" alt="一二布布${activity}的照片" class="w-full h-auto rounded-lg">
+                    <img src="images/gallery-${item.en}.jpg" alt="一二布布${item.zh}的照片" class="w-full h-auto rounded-lg">
                     <div class="gallery-overlay rounded-lg">
-                        <p class="text-white text-sm font-medium">${activity}</p>
+                        <p class="text-white text-sm font-medium">${item.zh}</p>
                     </div>
                 </div>
             `).join('')}
