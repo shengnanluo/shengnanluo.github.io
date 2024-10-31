@@ -1,21 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>一二布布</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一二布布</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/framer-motion@4.1.17/dist/framer-motion.js"></script>
 </head>
 <body>
-  <div id="root"></div>
-  
-  <!-- 引入 React 和 ReactDOM -->
-  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/framer-motion/dist/framer-motion.js"></script>
-  <script src="https://unpkg.com/lucide-react@0.31.0/build/lucide-react.js"></script>
-  
-  <!-- 加载 app.js -->
-  <script src="app.js"></script>
+    <div class="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 text-white font-sans">
+        <header class="py-6 px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center max-w-7xl mx-auto">
+                <h1 class="text-3xl font-extrabold tracking-tight">一二布布</h1>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-yellow-300 transition-colors">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <!-- Instagram icon path -->
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="#" class="hover:text-yellow-300 transition-colors">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <!-- Twitter icon path -->
+                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-5xl font-bold mb-4">遇见可爱的一二布布</h2>
+                <p class="text-xl text-yellow-200">一只充满魅力的小猫咪，正在征服互联网</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="slide-in-left">
+                    <img src="/placeholder.svg?height=400&width=400" alt="一二布布的特写" class="rounded-full w-full max-w-md mx-auto shadow-2xl">
+                </div>
+
+                <div class="slide-in-right bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+                    <div class="tab-buttons flex mb-6">
+                        <button class="tab-button active flex-1 py-2 px-4 text-sm font-medium rounded-full" data-tab="about">About</button>
+                        <button class="tab-button flex-1 py-2 px-4 text-sm font-medium rounded-full" data-tab="features">Features</button>
+                        <button class="tab-button flex-1 py-2 px-4 text-sm font-medium rounded-full" data-tab="gallery">Gallery</button>
+                    </div>
+
+                    <div class="tab-content" id="about">
+                        <!-- About content -->
+                    </div>
+
+                    <div class="tab-content hidden" id="features">
+                        <!-- Features content -->
+                    </div>
+
+                    <div class="tab-content hidden" id="gallery">
+                        <!-- Gallery content -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center fade-in">
+                <button class="bg-yellow-400 hover:bg-yellow-500 text-purple-700 font-bold py-3 px-8 rounded-full text-lg transition-colors flex items-center mx-auto">
+                    <svg class="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    关注一二布布
+                </button>
+            </div>
+        </main>
+
+        <footer class="mt-12 py-6 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto text-center text-sm">
+                <p>© 2024 一二布布粉丝团. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
 </body>
-</html>
+</html> 
