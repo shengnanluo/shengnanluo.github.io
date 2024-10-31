@@ -6,14 +6,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化标签页内容
     const aboutContent = `
         <h3 class="text-2xl font-bold mb-4">关于一二布布</h3>
-        <p class="text-lg mb-4">一二布布是一只充满活力和魅力的小猫咪。她那柔软的橘白相间的毛发和明亮的大眼睛，总是能够吸引所有人的目光。</p>
+        <p class="text-lg mb-4">一二是一只充满活力和魅力的大熊猫，布布是一只安静温和的棕色小熊猫。她们明亮的大眼睛，总是能够吸引所有人的目光</p>
         <p class="text-lg">无论是在阳光下慵懒地晒太阳，还是活跃地追逐玩具，一二布布总是散发着无限的可爱魅力。</p>
     `;
 
     const featuresContent = `
         <h3 class="text-2xl font-bold mb-4">一二布布的特点</h3>
         <ul class="space-y-2">
-            ${['毛色: 橘白相间', '性格: 活泼动', '爱好: 追逐玩具、晒太阳', '特长: 会做各种可爱的表情']
+            ${['毛色: 白色、棕色', '性格: 活泼动', '爱好: 追逐玩具、晒太阳', '特长: 会做各种可爱的表情']
                 .map((feature, index) => `
                     <li class="flex items-center text-lg fade-in" style="animation-delay: ${index * 0.1}s">
                         <svg class="h-5 w-5 mr-2 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -30,9 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="grid grid-cols-2 gap-4">
             ${[
                 {en: 'play', zh: '玩耍'},
-                {en: 'sleep', zh: '睡觉'},
+                {en: 'sleep', zh: '看病'},
                 {en: 'eat', zh: '吃饭'},
-                {en: 'cute', zh: '撒娇'}
+                {en: 'cute', zh: '春游'}
             ].map((item, index) => `
                 <div class="gallery-item rounded-lg" style="animation-delay: ${index * 0.1}s">
                     <img src="images/gallery-${item.en}.jpg" alt="一二布布${item.zh}的照片" class="w-full h-auto rounded-lg">
