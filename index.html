@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黄金矿工</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #2c3e50;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+
+        #gameCanvas {
+            background: #34495e;
+            border: 4px solid #2c3e50;
+            border-radius: 8px;
+        }
+
+        .game-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #fff;
+        }
+
+        button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #c0392b;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="game-ui">
+            <div>分数: <span id="score">0</span></div>
+            <div>时间: <span id="time">60</span></div>
+        </div>
+        <div id="gameOver" class="game-over">
+            <h2>游戏结束</h2>
+            <p>最终得分: <span id="finalScore">0</span></p>
+            <button onclick="game.restart()">重新开始</button>
+        </div>
+        <div class="instructions">
+            按空格键或点击屏幕发射钩子
+        </div>
+    </div>
+
+    <script>
+        class GameObject {
+            constructor(x, y, width, height, type) {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                this.type = type;
+                this.value = this.setValue(type);
+                this.color = this.setColor(type);
+            }
+
+            setValue(type) {
+                switch(type) {
+                    case 'gold': return 500;
+                    case 'silver': return 300;
+                    case 'stone': return 100;
+                    default: return 0;
+                }
+            }
+
+            setColor(type) {
+                switch(type) {
+                    case 'gold': return '#ffd700';
+                    case 'silver': return '#c0c0c0';
+                    case 'stone': return '#808080';
+                    default: return '#000000';
+                }
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.width/2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class Hook {
+            constructor(x, y) {
+                this.baseX = x;
+                this.baseY = y;
+                this.angle = -90;
+                this.length = 40;
+                this.extending = false;
+                this.retracting = false;
+                this.speed = 5;
+                this.maxLength = 500;
+                this.caught = null;
+                this.swingSpeed = 2;
+            }
+
+            update() {
+                if (!this.extending && !this.retracting) {
+                    this.angle += this.swingSpeed;
+                    if (this.angle > -10 || this.angle < -170) {
+                        this.swingSpeed *= -1;
+                    }
+                }
+
+                if (this.extending) {
+                    this.length += this.speed;
+                    if (this.length >= this.maxLength) {
+                        this.extending = false;
+                        this.retracting = true;
+                    }
+                }
+
+                if (this.retracting) {
+                    this.length -= this.speed;
+                    if (this.length <= 40) {
+                        this.reset();
+                    }
+                }
+
+                if (this.caught) {
+                    this.caught.x = this.baseX + Math.cos(this.angle * Math.PI / 180) * this.length;
+                    this.caught.y = this.baseY + Math.sin(this.angle * Math.PI / 180) * this.length;
+                }
+            }
+
+            reset() {
+                this.length = 40;
+                this.extending = false;
+                this.retracting = false;
+                this.caught = null;
+            }
+
+            draw(ctx) {
+                const endX = this.baseX + Math.cos(this.angle * Math.PI / 180) * this.length;
+                const endY = this.baseY + Math.sin(this.angle * Math.PI / 180) * this.length;
+
+                ctx.beginPath();
+                ctx.moveTo(this.baseX, this.baseY);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(endX, endY, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#8b4513';
+                ctx.fill();
+            }
+        }
+
+        class Game {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.score = 0;
+                this.timeLeft = 60;
+                this.gameObjects = [];
+                this.hook = new Hook(this.canvas.width/2, 50);
+                this.gameOver = false;
+
+                this.init();
+                this.bindEvents();
+            }
+
+            init() {
+                this.generateObjects();
+                this.startTimer();
+                this.gameLoop();
+            }
+
+            generateObjects() {
+                for (let i = 0; i < 10; i++) {
+                    const type = Math.random() < 0.3 ? 'gold' : 
+                               Math.random() < 0.6 ? 'silver' : 'stone';
+                    const size = type === 'gold' ? 40 : 
+                                type === 'silver' ? 30 : 20;
+                    
+                    this.gameObjects.push(new GameObject(
+                        Math.random() * (this.canvas.width - size) + size/2,
+                        Math.random() * (this.canvas.height - 200) + 200,
+                        size,
+                        size,
+                        type
+                    ));
+                }
+            }
+
+            bindEvents() {
+                window.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && !this.hook.extending && !this.hook.retracting) {
+                        this.hook.extending = true;
+                    }
+                });
+
+                this.canvas.addEventListener('click', () => {
+                    if (!this.hook.extending && !this.hook.retracting) {
+                        this.hook.extending = true;
+                    }
+                });
+            }
+
+            checkCollisions() {
+                if (!this.hook.extending || this.hook.caught) return;
+
+                const hookX = this.hook.baseX + Math.cos(this.hook.angle * Math.PI / 180) * this.hook.length;
+                const hookY = this.hook.baseY + Math.sin(this.hook.angle * Math.PI / 180) * this.hook.length;
+
+                for (let obj of this.gameObjects) {
+                    const dx = hookX - obj.x;
+                    const dy = hookY - obj.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < obj.width/2) {
+                        this.hook.caught = obj;
+                        this.hook.retracting = true;
+                        this.hook.extending = false;
+                        break;
+                    }
+                }
+            }
+
+            update() {
+                if (this.gameOver) return;
+
+                this.hook.update();
+                this.checkCollisions();
+
+                if (this.hook.caught && this.hook.length <= 40) {
+                    this.score += this.hook.caught.value;
+                    document.getElementById('score').textContent = this.score;
+                    this.gameObjects = this.gameObjects.filter(obj => obj !== this.hook.caught);
+                    this.hook.caught = null;
+                }
+
+                if (this.gameObjects.length === 0) {
+                    this.generateObjects();
+                }
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw background
+                this.ctx.fillStyle = '#34495e';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Draw objects
+                this.gameObjects.forEach(obj => obj.draw(this.ctx));
+                
+                // Draw hook
+                this.hook.draw(this.ctx);
+            }
+
+            gameLoop() {
+                this.update();
+                this.draw();
+                if (!this.gameOver) {
+                    requestAnimationFrame(() => this.gameLoop());
+                }
+            }
+
+            startTimer() {
+                const timer = setInterval(() => {
+                    this.timeLeft--;
+                    document.getElementById('time').textContent = this.timeLeft;
+                    
+                    if (this.timeLeft <= 0) {
+                        clearInterval(timer);
+                        this.endGame();
+                    }
+                }, 1000);
+            }
+
+            endGame() {
+                this.gameOver = true;
+                document.getElementById('gameOver').style.display = 'block';
+                document.getElementById('finalScore').textContent = this.score;
+            }
+
+            restart() {
+                this.score = 0;
+                this.timeLeft = 60;
+                this.gameOver = false;
+                this.gameObjects = [];
+                this.hook.reset();
+                document.getElementById('score').textContent = '0';
+                document.getElementById('time').textContent = '60';
+                document.getElementById('gameOver').style.display = 'none';
+                this.init();
+            }
+        }
+
+        // Start the game
+        const game = new Game();
+    </script>
+</body>
+</html> 
